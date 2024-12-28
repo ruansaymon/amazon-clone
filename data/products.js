@@ -656,5 +656,37 @@ const products = [
       "apparel",
       "mens"
     ]
-  }
+  },
+  {
+    id: "f1a72c4d-98b3-476f-b2ae-41f72b8a937d",
+    image: "images/products/backpack.jpg",
+    name: "Urban Edge Compact Backpack",
+    rating: {
+      stars: 4.0,
+      count: 14300
+    },
+    priceCents: 9900,
+    keywords: [
+      "everyday carry",
+      "backpack",
+      "mesh pockets",
+      "black"
+    ]
+  },
+  {
+    id: "d4f19a83-7e56-4c8d-9a2b-52fb83b2a64c",
+    image: "images/products/umbrella.jpg",
+    name: "StormGuard Compact Umbrella",
+    rating: {
+      stars: 4.5,
+      count: 1430
+    },
+    priceCents: 1900,
+    keywords: [
+      "windproof",
+      "umbrella",
+      "foldable",
+      "green color"
+    ]
+  },
 ];
