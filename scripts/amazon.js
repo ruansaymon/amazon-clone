@@ -63,6 +63,8 @@ products.forEach(product => {
 
 document.querySelector('.jsproducts-grid').innerHTML = productsHTML;
 
+updateCartQuantity();
+
 const addedMessageTimeouts = {};
 
 document.querySelectorAll('.js-add-to-cart').forEach(button => {
@@ -82,9 +84,8 @@ function updateCartQuantity() {
   let cartQuantity = 0;
   
   cart.forEach(cartItem => cartQuantity += cartItem.quantity);
-  
   document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-}
+  }
 
 function displayAddedMessage(productId) {
   const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`);
