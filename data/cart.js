@@ -30,3 +30,9 @@ export function calculateCartQuantity () {
   cart.forEach(cartItem => cartQuantity += cartItem.quantity);
   return cartQuantity;
 }
+
+export function updateQuantity(productId, updatedQuantity) {
+  const cartItem = cart.filter(cartItem => productId === cartItem.productId);
+  cartItem[0].quantity = updatedQuantity;
+  saveToLocalStorage();
+}

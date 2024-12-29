@@ -184,3 +184,27 @@
   margin-top: 11px;
   margin-bottom: 15px;
 }
+
+.update-quantity-input{
+  display: none;
+  width: 30px;
+}
+
+.save-update-quantity-link{
+  display:none;
+}
+
+.is-editing-quantity
+.update-quantity-input {
+  display: initial;
+}
+
+.is-editing-quantity
+.update-quantity-link {
+  display: none;
+}
+
+.is-editing-quantity
+.save-update-quantity-link {
+  display: initial;
+}
