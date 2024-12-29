@@ -43,6 +43,7 @@ cart.forEach(cartItem => {
                         data-product-id="${id}">
                     Delete
                   </span>
+                  <p class="update-alert js-update-alert-${id}"></p>
                 </div>
               </div>
 
@@ -122,13 +123,21 @@ document.querySelectorAll('.js-update-link').forEach(link => {
 document.querySelectorAll('.js-save-update-link').forEach(link => {
   link.addEventListener('click', _ => {
     const { productId } = link.dataset;
-    const productContainer = document.querySelector(`.js-cart-item-container-${productId}`);
-
-    productContainer.classList.remove('is-editing-quantity');
-    const updatedQuantity = Number(document.querySelector(`.js-update-quantity-input-${productId}`).value);
     
-    updateQuantity(productId,updatedQuantity);
+    const updatedQuantity = Number(document.querySelector(`.js-update-quantity-input-${productId}`).value);
 
+    let alertButton = document.querySelector(`.js-update-alert-${productId}`);
+    alertButton.innerHTML = '';
+    if (updatedQuantity < 0) {
+      alertButton.innerHTML = "Not a valid quantity!"
+      return;
+    }
+  
+    updateQuantity(productId,updatedQuantity);
+    
+    const productContainer = document.querySelector(`.js-cart-item-container-${productId}`);
+    productContainer.classList.remove('is-editing-quantity');
+    
     document.querySelector(`.js-quantity-${productId}`).innerHTML = updatedQuantity;
     updateCartQuantity();
   })

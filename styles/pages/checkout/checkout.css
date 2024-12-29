@@ -208,3 +208,9 @@
 .save-update-quantity-link {
   display: initial;
 }
+
+.update-alert{
+  margin-top: 30px;
+  color: #B12705;
+  font-weight: bold;
+}
