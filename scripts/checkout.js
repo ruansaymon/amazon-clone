@@ -102,48 +102,56 @@ updateCartQuantity();
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;  
 
 document.querySelectorAll('.js-delete-link').forEach(link => {
-  link.addEventListener('click', () => {
-    const { productId } = link.dataset;
-    
-    removeFromCart(productId);
-    document.querySelector(`.js-cart-item-container-${productId}`).remove();
-    updateCartQuantity();
-  })
-});
+  link.addEventListener('click', event => handleDeleteButton(event))});
 
 document.querySelectorAll('.js-update-link').forEach(link => {
-  link.addEventListener('click', _ => {
-    const { productId } = link.dataset;
-    const productContainer = document.querySelector(`.js-cart-item-container-${productId}`);
-
-    productContainer.classList.add('is-editing-quantity');
-  })
-});
+  link.addEventListener('click', event => handleUpdateButton (event))});
 
 document.querySelectorAll('.js-save-update-link').forEach(link => {
-  link.addEventListener('click', _ => {
-    const { productId } = link.dataset;
-    
-    const updatedQuantity = Number(document.querySelector(`.js-update-quantity-input-${productId}`).value);
-
-    let alertButton = document.querySelector(`.js-update-alert-${productId}`);
-    alertButton.innerHTML = '';
-    if (updatedQuantity < 0) {
-      alertButton.innerHTML = "Not a valid quantity!"
-      return;
-    }
-  
-    updateQuantity(productId,updatedQuantity);
-    
-    const productContainer = document.querySelector(`.js-cart-item-container-${productId}`);
-    productContainer.classList.remove('is-editing-quantity');
-    
-    document.querySelector(`.js-quantity-${productId}`).innerHTML = updatedQuantity;
-    updateCartQuantity();
-  })
-});
+  link.addEventListener('click', event => handleSaveUpdateButton(event))});
 
 function updateCartQuantity() {
   const cartQuantity = calculateCartQuantity();
   document.querySelector('.js-checkout-items').innerHTML = `${cartQuantity} items`;
+}
+
+function handleDelete (productId) {
+  removeFromCart(productId);
+  document.querySelector(`.js-cart-item-container-${productId}`).remove();
+  updateCartQuantity();
+}
+
+function handleDeleteButton (event) {
+  const { productId } = event.target.dataset;
+  handleDelete (productId);
+}
+
+function handleUpdateButton (event) {
+  const { productId } = event.target.dataset;
+  const productContainer = document.querySelector(`.js-cart-item-container-${productId}`);
+  productContainer.classList.add('is-editing-quantity');
+}
+
+function handleSaveUpdateButton (event) {
+  const { productId } = event.target.dataset;
+  
+  const updatedQuantity = Number(document.querySelector(`.js-update-quantity-input-${productId}`).value);
+
+  let alertButton = document.querySelector(`.js-update-alert-${productId}`);
+  alertButton.innerHTML = '';
+  if (updatedQuantity < 0) {
+    alertButton.innerHTML = "Not a valid quantity!"
+    return;
+  } else if (updatedQuantity === 0) {
+    handleDelete (productId);
+    return;
+  }
+
+  updateQuantity(productId,updatedQuantity);
+  
+  const productContainer = document.querySelector(`.js-cart-item-container-${productId}`);
+  productContainer.classList.remove('is-editing-quantity');
+
+  document.querySelector(`.js-quantity-${productId}`).innerHTML = updatedQuantity;
+  updateCartQuantity();
 }
