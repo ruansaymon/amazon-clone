@@ -34,7 +34,8 @@ cart.forEach(cartItem => {
                         data-product-id="${id}">
                     Update
                   </span>
-                  <input class="update-quantity-input js-update-quantity-input js-update-quantity-input-${id}">
+                  <input class="update-quantity-input js-update-quantity-input js-update-quantity-input-${id}"
+                          data-product-id="${id}">
                   <span class="link-primary save-update-quantity-link js-save-update-link"
                         data-product-id="${id}">
                     Save
@@ -110,6 +111,10 @@ document.querySelectorAll('.js-update-link').forEach(link => {
 document.querySelectorAll('.js-save-update-link').forEach(link => {
   link.addEventListener('click', event => handleSaveUpdateButton(event))});
 
+document.querySelectorAll('.js-update-quantity-input').forEach(input => {
+  input.addEventListener('keydown', event => handleKeydownOnUpdate(event))
+})
+
 function updateCartQuantity() {
   const cartQuantity = calculateCartQuantity();
   document.querySelector('.js-checkout-items').innerHTML = `${cartQuantity} items`;
@@ -139,7 +144,7 @@ function handleSaveUpdateButton (event) {
 
   let alertButton = document.querySelector(`.js-update-alert-${productId}`);
   alertButton.innerHTML = '';
-  if (updatedQuantity < 0) {
+  if (updatedQuantity < 0 || isNaN(updatedQuantity)) {
     alertButton.innerHTML = "Not a valid quantity!"
     return;
   } else if (updatedQuantity === 0) {
@@ -154,4 +159,11 @@ function handleSaveUpdateButton (event) {
 
   document.querySelector(`.js-quantity-${productId}`).innerHTML = updatedQuantity;
   updateCartQuantity();
+}
+
+function handleKeydownOnUpdate (event) {
+  if (event.key === 'Enter') {
+    const { productId } = event.target.dataset;
+    handleSaveUpdateButton({ target: { dataset: { productId } } });
+  }
 }
