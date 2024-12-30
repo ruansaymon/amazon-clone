@@ -4,7 +4,7 @@ import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import deliveryOptions from '../../data/deliveryOptions.js';
 
-export default function renderOrderSummary(){
+export default function renderCartSummary(){
   let cartSummaryHTML = '';
 
   cart.forEach(cartItem => {
@@ -186,5 +186,5 @@ function deliveryOptionsHTML (id,cartItem) {
 function handleUpdateDeliveryOption (event) {
   const { productId, deliveryOptionId } = event.currentTarget.dataset;
   updateDeliveryOption(productId, deliveryOptionId);
-  renderOrderSummary();
+  renderCartSummary();
 }
