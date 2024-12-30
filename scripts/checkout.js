@@ -1,85 +1,94 @@
-import { cart,removeFromCart,calculateCartQuantity,updateQuantity } from '../data/cart.js';
+import { cart,removeFromCart,calculateCartQuantity,updateQuantity,updateDeliveryOption } from '../data/cart.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import deliveryOptions from '../data/deliveryOptions.js';
 
-let cartSummaryHTML = '';
+renderOrderSummary();
 
-cart.forEach(cartItem => {
-  const { productId, quantity,deliveryOptionId } = cartItem;
+function renderOrderSummary(){
+  let cartSummaryHTML = '';
+
+  cart.forEach(cartItem => {
+    const { productId, quantity,deliveryOptionId } = cartItem;
+    
+    const matchingProduct = products.find(product => product.id === productId);
+    const { id, image, name, priceCents } = matchingProduct;
+    
+    const deliveryOption = deliveryOptions.find(deliveryOption => deliveryOption.id === deliveryOptionId)
+    const deliveryDate = calculateDeliveryDate(deliveryOption);
   
-  const matchingProduct = products.find(product => product.id === productId);
-  const { id, image, name, priceCents } = matchingProduct;
+    cartSummaryHTML += `
+            <div class="cart-item-container js-cart-item-container-${id}">
+              <div class="delivery-date">
+                Delivery date: ${deliveryDate.dateString}
+              </div>
   
-  const deliveryOption = deliveryOptions.find(deliveryOption => deliveryOption.id === deliveryOptionId)
-  const deliveryDate = calculateDeliveryDate(deliveryOption);
-
-  cartSummaryHTML += `
-          <div class="cart-item-container js-cart-item-container-${id}">
-            <div class="delivery-date">
-              Delivery date: ${deliveryDate.dateString}
-            </div>
-
-            <div class="cart-item-details-grid">
-              <img class="product-image"
-                src="${image}">
-
-              <div class="cart-item-details">
-                <div class="product-name">
-                  ${name}
-                </div>
-                <div class="product-price">
-                  $${formatCurrency(priceCents)}
-                </div>
-                <div class="product-quantity">
-                  <span>
-                    Quantity: <span class="quantity-label js-quantity-${id}">${quantity}</span>
-                  </span>
-                  <span class="update-quantity-link link-primary js-update-link" 
-                        data-product-id="${id}">
-                    Update
-                  </span>
-                  <input class="update-quantity-input js-update-quantity-input js-update-quantity-input-${id}"
+              <div class="cart-item-details-grid">
+                <img class="product-image"
+                  src="${image}">
+  
+                <div class="cart-item-details">
+                  <div class="product-name">
+                    ${name}
+                  </div>
+                  <div class="product-price">
+                    $${formatCurrency(priceCents)}
+                  </div>
+                  <div class="product-quantity">
+                    <span>
+                      Quantity: <span class="quantity-label js-quantity-${id}">${quantity}</span>
+                    </span>
+                    <span class="update-quantity-link link-primary js-update-link" 
                           data-product-id="${id}">
-                  <span class="link-primary save-update-quantity-link js-save-update-link"
-                        data-product-id="${id}">
-                    Save
-                  </span>
-                  <span class="delete-quantity-link link-primary js-delete-link" 
-                        data-product-id="${id}">
-                    Delete
-                  </span>
-                  <p class="update-alert js-update-alert-${id}"></p>
+                      Update
+                    </span>
+                    <input class="update-quantity-input js-update-quantity-input js-update-quantity-input-${id}"
+                            data-product-id="${id}">
+                    <span class="link-primary save-update-quantity-link js-save-update-link"
+                          data-product-id="${id}">
+                      Save
+                    </span>
+                    <span class="delete-quantity-link link-primary js-delete-link" 
+                          data-product-id="${id}">
+                      Delete
+                    </span>
+                    <p class="update-alert js-update-alert-${id}"></p>
+                  </div>
                 </div>
-              </div>
-              <div class="delivery-options">
-                <div class="delivery-options-title">
-                  Choose a delivery option:
+                <div class="delivery-options">
+                  <div class="delivery-options-title">
+                    Choose a delivery option:
+                  </div>
+                  ${deliveryOptionsHTML(id,cartItem)}
                 </div>
-                ${deliveryOptionsHTML(id,cartItem)}
               </div>
             </div>
-          </div>
-  `
-})
+    `
+  })
+  
+  updateCartQuantity();
+  
+  document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;  
+  
+  document.querySelectorAll('.js-delete-link').forEach(link => {
+    link.addEventListener('click', event => handleDeleteButton(event))});
+  
+  document.querySelectorAll('.js-update-link').forEach(link => {
+    link.addEventListener('click', event => handleUpdateButton (event))});
+  
+  document.querySelectorAll('.js-save-update-link').forEach(link => {
+    link.addEventListener('click', event => handleSaveUpdateButton(event))});
+  
+  document.querySelectorAll('.js-update-quantity-input').forEach(input => {
+    input.addEventListener('keydown', event => handleKeydownOnUpdate(event))
+  })
+  
+  document.querySelectorAll('.js-delivery-option').forEach(element => {
+    element.addEventListener('click', event => handleUpdateDeliveryOption(event))
+  })
+}
 
-updateCartQuantity();
-
-document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;  
-
-document.querySelectorAll('.js-delete-link').forEach(link => {
-  link.addEventListener('click', event => handleDeleteButton(event))});
-
-document.querySelectorAll('.js-update-link').forEach(link => {
-  link.addEventListener('click', event => handleUpdateButton (event))});
-
-document.querySelectorAll('.js-save-update-link').forEach(link => {
-  link.addEventListener('click', event => handleSaveUpdateButton(event))});
-
-document.querySelectorAll('.js-update-quantity-input').forEach(input => {
-  input.addEventListener('keydown', event => handleKeydownOnUpdate(event))
-})
 
 function updateCartQuantity() {
   const cartQuantity = calculateCartQuantity();
@@ -108,10 +117,10 @@ function handleSaveUpdateButton (event) {
   
   const updatedQuantity = Number(document.querySelector(`.js-update-quantity-input-${productId}`).value);
 
-  let alertButton = document.querySelector(`.js-update-alert-${productId}`);
-  alertButton.innerHTML = '';
+  let alertElement = document.querySelector(`.js-update-alert-${productId}`);
+  alertElement.innerHTML = '';
   if (updatedQuantity < 0 || isNaN(updatedQuantity)) {
-    alertButton.innerHTML = "Not a valid quantity!"
+    alertElement.innerHTML = "Not a valid quantity!"
     return;
   } else if (updatedQuantity === 0) {
     handleDelete (productId);
@@ -152,7 +161,9 @@ function deliveryOptionsHTML (id,cartItem) {
     const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
 
     html += `
-      <div class="delivery-option">
+      <div class="delivery-option js-delivery-option"
+            data-product-id="${id}"
+            data-delivery-option-id=${deliveryOption.id}>
         <input type="radio"
           ${isChecked ? 'checked' : ''}
           class="delivery-option-input"
@@ -170,4 +181,10 @@ function deliveryOptionsHTML (id,cartItem) {
   });
   
   return html;
+}
+
+function handleUpdateDeliveryOption (event) {
+  const { productId, deliveryOptionId } = event.currentTarget.dataset;
+  updateDeliveryOption(productId, deliveryOptionId);
+  renderOrderSummary();
 }
