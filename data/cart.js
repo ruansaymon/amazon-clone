@@ -14,7 +14,7 @@ export function addToCart(productId,quantity,deliveryOptionId) {
   if (matchingCartItem) {
     matchingCartItem.quantity += quantity;
   } else {
-    cart.push({productId, quantity, deliveryOptionId});
+    cart.push({productId, quantity, deliveryOptionId:'1'});
   }
   
   saveToLocalStorage();

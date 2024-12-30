@@ -1,8 +1,8 @@
 import { cart,removeFromCart,calculateCartQuantity,updateQuantity,updateDeliveryOption } from '../../data/cart.js';
-import { products } from '../../data/products.js';
+import { getProduct } from '../../data/products.js';
+import { getDeliveryOption, deliveryOptions } from '../../data/deliveryOptions.js';
 import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import deliveryOptions from '../../data/deliveryOptions.js';
 
 export default function renderCartSummary(){
   let cartSummaryHTML = '';
@@ -10,10 +10,10 @@ export default function renderCartSummary(){
   cart.forEach(cartItem => {
     const { productId, quantity,deliveryOptionId } = cartItem;
     
-    const matchingProduct = products.find(product => product.id === productId);
+    const matchingProduct = getProduct(productId);
     const { id, image, name, priceCents } = matchingProduct;
     
-    const deliveryOption = deliveryOptions.find(deliveryOption => deliveryOption.id === deliveryOptionId)
+    const deliveryOption = getDeliveryOption(deliveryOptionId);
     const deliveryDate = calculateDeliveryDate(deliveryOption);
   
     cartSummaryHTML += `
@@ -65,7 +65,7 @@ export default function renderCartSummary(){
     `
   })
   
-  document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;  
+  document.querySelector('.js-cart-summary').innerHTML = cartSummaryHTML;  
   
   updateCartQuantity();
   attachEventListeners();
