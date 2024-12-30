@@ -3,6 +3,7 @@ import { getProduct } from '../../data/products.js';
 import { getDeliveryOption, deliveryOptions } from '../../data/deliveryOptions.js';
 import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
+import renderPaymentSummary from './paymentSummary.js';
 
 export default function renderCartSummary(){
   let cartSummaryHTML = '';
@@ -99,6 +100,7 @@ function handleDelete (productId) {
   removeFromCart(productId);
   document.querySelector(`.js-cart-item-container-${productId}`).remove();
   updateCartQuantity();
+  renderPaymentSummary();
 }
 
 function handleDeleteButton (event) {
@@ -134,6 +136,7 @@ function handleSaveUpdateButton (event) {
 
   document.querySelector(`.js-quantity-${productId}`).innerHTML = updatedQuantity;
   updateCartQuantity();
+  renderPaymentSummary();
 }
 
 function handleKeydownOnUpdate (event) {
@@ -187,4 +190,5 @@ function handleUpdateDeliveryOption (event) {
   const { productId, deliveryOptionId } = event.currentTarget.dataset;
   updateDeliveryOption(productId, deliveryOptionId);
   renderCartSummary();
+  renderPaymentSummary();
 }
