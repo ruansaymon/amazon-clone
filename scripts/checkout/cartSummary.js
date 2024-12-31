@@ -4,6 +4,7 @@ import { getDeliveryOption, deliveryOptions } from '../../data/deliveryOptions.j
 import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import renderPaymentSummary from './paymentSummary.js';
+import renderCheckoutHeader from './checkoutHeader.js';
 
 export default function renderCartSummary(){
   let cartSummaryHTML = '';
@@ -67,8 +68,7 @@ export default function renderCartSummary(){
   })
   
   document.querySelector('.js-cart-summary').innerHTML = cartSummaryHTML;  
-  
-  updateCartQuantity();
+
   attachEventListeners();
 }
 
@@ -91,15 +91,11 @@ function attachEventListeners () {
   })
 }
 
-function updateCartQuantity() {
-  const cartQuantity = calculateCartQuantity();
-  document.querySelector('.js-checkout-items').innerHTML = `${cartQuantity} items`;
-}
-
 function handleDelete (productId) {
   removeFromCart(productId);
-  document.querySelector(`.js-cart-item-container-${productId}`).remove();
-  updateCartQuantity();
+  
+  renderCheckoutHeader();
+  renderCartSummary();
   renderPaymentSummary();
 }
 
@@ -134,8 +130,8 @@ function handleSaveUpdateButton (event) {
   const productContainer = document.querySelector(`.js-cart-item-container-${productId}`);
   productContainer.classList.remove('is-editing-quantity');
 
-  document.querySelector(`.js-quantity-${productId}`).innerHTML = updatedQuantity;
-  updateCartQuantity();
+  renderCheckoutHeader();
+  renderCartSummary();
   renderPaymentSummary();
 }
 
@@ -189,6 +185,8 @@ function deliveryOptionsHTML (id,cartItem) {
 function handleUpdateDeliveryOption (event) {
   const { productId, deliveryOptionId } = event.currentTarget.dataset;
   updateDeliveryOption(productId, deliveryOptionId);
+  
+  renderCheckoutHeader();
   renderCartSummary();
   renderPaymentSummary();
 }
