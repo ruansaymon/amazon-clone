@@ -1,8 +1,7 @@
-import { cart,removeFromCart,calculateCartQuantity,updateQuantity,updateDeliveryOption } from '../../data/cart.js';
+import { cart,removeFromCart,updateQuantity,updateDeliveryOption } from '../../data/cart.js';
 import { getProduct } from '../../data/products.js';
-import { getDeliveryOption, deliveryOptions } from '../../data/deliveryOptions.js';
+import { getDeliveryOption, deliveryOptions, calculateDeliveryDate } from '../../data/deliveryOptions.js';
 import { formatCurrency } from '../utils/money.js';
-import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import renderPaymentSummary from './paymentSummary.js';
 import renderCheckoutHeader from './checkoutHeader.js';
 
@@ -140,16 +139,6 @@ function handleKeydownOnUpdate (event) {
     const { productId } = event.target.dataset;
     handleSaveUpdateButton({ target: { dataset: { productId } } });
   }
-}
-
-function calculateDeliveryDate (deliveryOption) {
-  const today = dayjs();
-  const deliveryDate = today.add(deliveryOption.deliveryDays,'days');
-  const dateString = deliveryDate.format('dddd, MMMM D');
-  const priceString = deliveryOption.priceCents === 0 
-                      ? 'FREE Shipping'
-                      : `$${formatCurrency(deliveryOption.priceCents)} - Shipping`;
-  return {dateString, priceString};
 }
 
 function deliveryOptionsHTML (id,cartItem) {
