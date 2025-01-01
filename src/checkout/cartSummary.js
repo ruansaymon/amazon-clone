@@ -1,6 +1,6 @@
-import { cart,removeFromCart,updateQuantity,updateDeliveryOption } from '../../data/cart.js';
-import { getProduct } from '../../data/products.js';
-import { getDeliveryOption, deliveryOptions, calculateDeliveryDate } from '../../data/deliveryOptions.js';
+import { cart,removeFromCart,updateQuantity,updateDeliveryOption } from '../data/cart.js';
+import { getProduct } from '../data/products.js';
+import { getDeliveryOption, deliveryOptions, calculateDeliveryDate } from '../data/deliveryOptions.js';
 import { formatCurrency } from '../utils/money.js';
 import renderPaymentSummary from './paymentSummary.js';
 import renderCheckoutHeader from './checkoutHeader.js';
