@@ -18,7 +18,7 @@ export default function renderCartSummary(){
     const deliveryDate = calculateDeliveryDate(deliveryOption);
   
     cartSummaryHTML += `
-            <div class="cart-item-container js-cart-item-container-${id}">
+            <div class="cart-item-container js-cart-item-container js-cart-item-container-${id}">
               <div class="delivery-date">
                 Delivery date: ${deliveryDate.dateString}
               </div>
@@ -48,8 +48,8 @@ export default function renderCartSummary(){
                           data-product-id="${id}">
                       Save
                     </span>
-                    <span class="delete-quantity-link link-primary js-delete-link" 
-                          data-product-id="${id}">
+                    <span class="delete-quantity-link link-primary js-delete-link 
+                          js-delete-link-${id}" data-product-id="${id}">
                       Delete
                     </span>
                     <p class="update-alert js-update-alert-${id}"></p>
