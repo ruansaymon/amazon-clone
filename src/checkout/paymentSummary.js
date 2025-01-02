@@ -14,27 +14,37 @@ export default function renderPaymentSummary () {
 
     <div class="payment-summary-row">
       <div>Items (${calculateCartQuantity()}):</div>
-      <div class="payment-summary-money">$${costs.productsCost}</div>
+      <div class="payment-summary-money">$
+       ${costs.productsCost}
+      </div>
     </div>
 
     <div class="payment-summary-row">
       <div>Shipping &amp; handling:</div>
-      <div class="payment-summary-money">$${costs.shippingCost}</div>
+      <div class="payment-summary-money js-payment-summary-shipping-cost">
+        $${costs.shippingCost}
+      </div>
     </div>
 
     <div class="payment-summary-row subtotal-row">
       <div>Total before tax:</div>
-      <div class="payment-summary-money">$${costs.totalBeforeTaxCost}</div>
+      <div class="payment-summary-money">
+        $${costs.totalBeforeTaxCost}
+      </div>
     </div>
 
     <div class="payment-summary-row">
       <div>Estimated tax (10%):</div>
-      <div class="payment-summary-money">$${costs.taxCost}</div>
+      <div class="payment-summary-money">$
+        ${costs.taxCost}
+      </div>
     </div>
 
     <div class="payment-summary-row total-row">
       <div>Order total:</div>
-      <div class="payment-summary-money">$${costs.totalCost}</div>
+      <div class="payment-summary-money js-payment-summary-total-cost">
+        $${costs.totalCost}
+      </div>
     </div>
 
     <button class="place-order-button button-primary">
