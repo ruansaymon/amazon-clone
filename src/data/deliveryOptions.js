@@ -19,6 +19,12 @@ export const deliveryOptions = [
   },
 ];
 
+export function validDeliveryOption (deliveryOptionId) {
+  const deliveryOption = deliveryOptions.find(deliveryOption => deliveryOption.id === deliveryOptionId);
+  if (!deliveryOption) return false;
+  return true;
+}
+
 export function getDeliveryOption (deliveryOptionId) {
   const deliveryOption = deliveryOptions.find(deliveryOption => deliveryOption.id === deliveryOptionId);
   return deliveryOption || deliveryOptions[0];

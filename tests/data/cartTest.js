@@ -1,4 +1,4 @@
-import { cart, addToCart, loadFromStorage, removeFromCart } from '../../src/data/cart.js';          
+import { cart, addToCart, loadFromStorage, removeFromCart,updateDeliveryOption } from '../../src/data/cart.js';          
 
 describe('test suite: addToCart', () => {
   beforeEach (() => {
@@ -108,4 +108,90 @@ describe('test suite: removeFromCart', () => {
     expect(cart[1].quantity).toEqual(1);
     expect(cart[1].deliveryOptionId).toEqual('1');  
   });
+});
+
+describe('test suite: updateDeliveryOption', () => {
+  const productId1 = 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6';
+  const productId2 = '15b6fc6f-327a-4ec4-896f-486349e85a3d';
+  const idNotInCart = '83d4ca15-0f35-48f5-b7a3-1ea210004f2e';
+  
+  beforeEach(() => {
+    spyOn(localStorage,'setItem');
+
+    spyOn(localStorage, 'getItem').and.callFake(() => {
+      return JSON.stringify([{
+        productId:'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
+        quantity:2,
+        deliveryOptionId:'1',
+      }, {
+        productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
+        quantity:1,
+        deliveryOptionId:'1',
+      }]);
+    });
+
+    loadFromStorage();
+  });
+  
+  it('updates a product in the cart',() => {
+    updateDeliveryOption(productId1,'2');
+
+    expect(cart.length).toEqual(2);
+    
+    expect(cart[0].productId).toEqual(productId1);
+    expect(cart[1].productId).toEqual(productId2);
+    
+    expect(cart[0].quantity).toEqual(2);
+    expect(cart[1].quantity).toEqual(1);
+    
+    expect(cart[0].deliveryOptionId).toEqual('2');
+    expect(cart[1].deliveryOptionId).toEqual('1');
+    
+    expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+    expect(localStorage.setItem).toHaveBeenCalledWith('cart', JSON.stringify([{
+      productId:'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
+      quantity:2,
+      deliveryOptionId:'2',
+      }, {
+      productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
+      quantity:1,
+      deliveryOptionId:'1',
+    }]));
+  }); 
+
+  it('keeps the cart unchanged if product is not found in the cart',() => {
+    updateDeliveryOption(idNotInCart,'2');
+
+    expect(cart.length).toEqual(2);
+    
+    expect(cart[0].productId).toEqual(productId1);
+    expect(cart[1].productId).toEqual(productId2);
+    
+    expect(cart[0].quantity).toEqual(2);
+    expect(cart[1].quantity).toEqual(1);
+    
+    expect(cart[0].deliveryOptionId).toEqual('1');
+    expect(cart[1].deliveryOptionId).toEqual('1');
+    
+    expect(localStorage.setItem).toHaveBeenCalledTimes(0);
+  }); 
+
+  it('keeps the cart unchanged if deliveryOptionId does not exist',() => {
+    updateDeliveryOption(productId2,'4');
+
+    expect(cart.length).toEqual(2);
+    
+    expect(cart[0].productId).toEqual(productId1);
+    expect(cart[1].productId).toEqual(productId2);
+    
+    expect(cart[0].quantity).toEqual(2);
+    expect(cart[1].quantity).toEqual(1);
+    
+    expect(cart[0].deliveryOptionId).toEqual('1');
+    expect(cart[1].deliveryOptionId).toEqual('1');
+    
+    expect(localStorage.setItem).toHaveBeenCalledTimes(0);
+  }); 
+
+  
 });

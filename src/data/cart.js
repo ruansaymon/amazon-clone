@@ -1,3 +1,5 @@
+import {validDeliveryOption} from './deliveryOptions.js';
+
 export let cart;
 
 loadFromStorage();
@@ -48,8 +50,12 @@ export function updateQuantity(productId, updatedQuantity) {
 
 export function updateDeliveryOption (productId, updatedDeliveryOptionId) {
   const cartItem = getCartItem(productId);
-  if (cartItem) {
+  const isValid = validDeliveryOption(updatedDeliveryOptionId);
+    
+  if (cartItem && isValid) {
     cartItem.deliveryOptionId = updatedDeliveryOptionId;
     saveToLocalStorage();
   }
+  
+  return;
 }
