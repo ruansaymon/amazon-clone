@@ -28,10 +28,10 @@ export default function renderCartSummary(){
                   src="${image}">
   
                 <div class="cart-item-details">
-                  <div class="product-name">
+                  <div class="product-name js-product-name-${id}">
                     ${name}
                   </div>
-                  <div class="product-price">
+                  <div class="product-price js-product-price-${id}">
                     $${formatCurrency(priceCents)}
                   </div>
                   <div class="product-quantity">
