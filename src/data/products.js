@@ -13,6 +13,21 @@ class Product {
   getStarsUrl = () => `images/ratings/rating-${this.rating.stars*10}.png`
 
   getPrice = () =>`$${formatCurrency(this.priceCents)}`
+
+  extraInfoHTML = () => ''
+}
+
+class Clothing extends Product {
+  constructor (productDetails) {
+    super(productDetails);
+    this.sizeChartLink = productDetails.sizeChartLink;
+  }
+
+  extraInfoHTML = () => `<a href="${this.sizeChartLink}" target="_blank">Size Chart</a>`
+}
+
+const productClasses = {
+  clothing: Clothing,
 }
 
 export const products = [
@@ -707,9 +722,9 @@ export const products = [
     ]
   },
 ].map((productDetails) => {
-  return new Product(productDetails);
+  const productClass = productClasses[productDetails.type] || Product;
+  return new productClass(productDetails);
 });
-
 
 export function getProduct (productId) {
   const product = products.find(product => product.id === productId);

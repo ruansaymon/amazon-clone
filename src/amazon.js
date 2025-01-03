@@ -4,29 +4,20 @@ import { products } from './data/products.js';
 let productsHTML = '';
 
 products.forEach(product => {
-  const { id,image, name, rating, getPrice,getStarsUrl } = product;
+  const { id,image, name, rating} = product;
   const html = `
         <div class="product-container">
           <div class="product-image-container">
-            <img class="product-image"
-              src="${image}">
-          </div>
+            <img class="product-image" src="${image}"></div>
 
-          <div class="product-name limit-text-to-2-lines">
-            ${name}
-          </div>
+          <div class="product-name limit-text-to-2-lines">${name}</div>
 
           <div class="product-rating-container">
-            <img class="product-rating-stars"
-              src="${getStarsUrl()}">
-            <div class="product-rating-count link-primary">
-              ${rating.count}
-            </div>
+            <img class="product-rating-stars" src="${product.getStarsUrl()}">
+            <div class="product-rating-count link-primary">${rating.count}</div>
           </div>
 
-          <div class="product-price">
-            ${getPrice()}
-          </div>
+          <div class="product-price">${product.getPrice()}</div>
 
           <div class="product-quantity-container">
             <select class="js-quantity-selector-${id}">
@@ -43,6 +34,8 @@ products.forEach(product => {
             </select>
           </div>
 
+          ${product.extraInfoHTML()}
+
           <div class="product-spacer"></div>
 
           <div class="added-to-cart js-added-to-cart-${id}">
@@ -51,8 +44,7 @@ products.forEach(product => {
           </div>
 
           <button class="add-to-cart-button button-primary js-add-to-cart"
-          data-product-id="${id}"
-          >
+                  data-product-id="${id}">
             Add to Cart
           </button>
         </div>
