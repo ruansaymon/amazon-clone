@@ -1,3 +1,20 @@
+import { formatCurrency } from '../utils/money.js';
+
+class Product {
+  constructor (productDetails) {
+    this.id = productDetails.id;
+    this.image = productDetails.image;
+    this.name = productDetails.name;
+    this.rating = productDetails.rating;
+    this.priceCents = productDetails.priceCents;
+    this.keywords = productDetails.keywords;
+  }
+
+  getStarsUrl = () => `images/ratings/rating-${this.rating.stars*10}.png`
+
+  getPrice = () =>`$${formatCurrency(this.priceCents)}`
+}
+
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -689,7 +706,10 @@ export const products = [
       "green color"
     ]
   },
-];
+].map((productDetails) => {
+  return new Product(productDetails);
+});
+
 
 export function getProduct (productId) {
   const product = products.find(product => product.id === productId);

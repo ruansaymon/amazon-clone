@@ -1,7 +1,6 @@
 import { cart,removeFromCart,updateQuantity,updateDeliveryOption } from '../data/cart.js';
 import { getProduct } from '../data/products.js';
 import { getDeliveryOption, deliveryOptions, calculateDeliveryDate } from '../data/deliveryOptions.js';
-import { formatCurrency } from '../utils/money.js';
 import renderPaymentSummary from './paymentSummary.js';
 import renderCheckoutHeader from './checkoutHeader.js';
 
@@ -12,7 +11,7 @@ export default function renderCartSummary(){
     const { productId, quantity,deliveryOptionId } = cartItem;
     
     const matchingProduct = getProduct(productId);
-    const { id, image, name, priceCents } = matchingProduct;
+    const { id, image, name, getPrice } = matchingProduct;
     
     const deliveryOption = getDeliveryOption(deliveryOptionId);
     const deliveryDate = calculateDeliveryDate(deliveryOption);
@@ -32,7 +31,7 @@ export default function renderCartSummary(){
                     ${name}
                   </div>
                   <div class="product-price js-product-price-${id}">
-                    $${formatCurrency(priceCents)}
+                    ${getPrice()}
                   </div>
                   <div class="product-quantity">
                     <span>
