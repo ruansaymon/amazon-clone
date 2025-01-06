@@ -48,7 +48,7 @@ export function loadProducts(fun) {
   xhr.send();
 };
 
-loadProducts(() => {console.log('loaded products')});
+loadProducts(() => {});
 
 export function getProduct (productId) {
   const product = products.find(product => product.id === productId);

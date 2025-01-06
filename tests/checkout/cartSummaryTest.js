@@ -1,11 +1,18 @@
 import renderCartSummary from '../../src/checkout/cartSummary.js';
 import renderPaymentSummary from '../../src/checkout/paymentSummary.js';
-import {cart,loadFromStorage } from '../../src/data/cart.js';          
+import {cart,loadFromStorage } from '../../src/data/cart.js';    
+import { loadProducts } from '../../src/data/products.js';      
 
 describe('test suite: renderCartSummary',() => {
   const productId1 = '15b6fc6f-327a-4ec4-896f-486349e85a3d';
   const productId2 = '83d4ca15-0f35-48f5-b7a3-1ea210004f2e';
   
+  beforeAll((done) => {
+    loadProducts(() => {
+      done();
+    });
+  });
+
   beforeEach(() => {
     spyOn(localStorage,'setItem');
     
@@ -26,8 +33,8 @@ describe('test suite: renderCartSummary',() => {
         deliveryOptionId: '2',
       }]);
     });
+    
     loadFromStorage();
-
     renderCartSummary();
   });
 
