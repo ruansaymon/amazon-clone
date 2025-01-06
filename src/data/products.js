@@ -32,23 +32,21 @@ const productClasses = {
 
 export let products = [];
 
-export function loadProducts(fun) {
-  const xhr = new XMLHttpRequest();
+export function loadProducts (fun) {
+  const promise = fetch(
+    'https://supersimplebackend.dev/products'
   
-  xhr.addEventListener('load', () => {
-    products = JSON.parse(xhr.response).map((productDetails) => {
-        const productClass = productClasses[productDetails.type] || Product;
-        return new productClass(productDetails)
-      });
-    
-      fun();
-  });
-
-  xhr.open('GET','https://supersimplebackend.dev/products');
-  xhr.send();
-};
-
-loadProducts(() => {});
+  ).then((response) => {
+    return response.json();
+  
+  }).then((productsData) => {
+    products = productsData.map((productDetails) => {
+      const productClass = productClasses[productDetails.type] || Product;
+      return new productClass(productDetails)
+    });
+  }); 
+  return promise;
+}
 
 export function getProduct (productId) {
   const product = products.find(product => product.id === productId);

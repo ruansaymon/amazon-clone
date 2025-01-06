@@ -8,9 +8,7 @@ describe('test suite: renderCartSummary',() => {
   const productId2 = '83d4ca15-0f35-48f5-b7a3-1ea210004f2e';
   
   beforeAll((done) => {
-    loadProducts(() => {
-      done();
-    });
+    loadProducts().then(() => {done();})
   });
 
   beforeEach(() => {
