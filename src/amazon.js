@@ -1,7 +1,7 @@
 import { addToCart,calculateCartQuantity } from './data/cart.js';
 import { products,loadProducts } from './data/products.js';
 
-loadProducts(renderProductsGrid);
+loadProducts().then(() => {renderProductsGrid()});
 
 function renderProductsGrid () {
 

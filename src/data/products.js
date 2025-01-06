@@ -32,20 +32,13 @@ const productClasses = {
 
 export let products = [];
 
-export function loadProducts (fun) {
-  const promise = fetch(
-    'https://supersimplebackend.dev/products'
-  
-  ).then((response) => {
-    return response.json();
-  
-  }).then((productsData) => {
-    products = productsData.map((productDetails) => {
+export async function loadProducts () {
+  const response = await fetch('https://supersimplebackend.dev/products');
+  const productsData = await response.json();
+  products = productsData.map((productDetails) => {
       const productClass = productClasses[productDetails.type] || Product;
       return new productClass(productDetails)
     });
-  }); 
-  return promise;
 }
 
 export function getProduct (productId) {
